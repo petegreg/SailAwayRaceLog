@@ -1,0 +1,25 @@
+.leaflet-popup-content { color: black; }
+#windy {
+    width: 100%;
+    height: 680px;
+}
+.sarl {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 0.3em !important;
+    border-radius: 0.3em;
+    position: absolute;
+    z-index: 1;
+    color: white;
+}
+#sarl_RaceBadge_div {
+    left: 5px;
+    top: 5px;     
+    max-width:120px;
+}
+#sarl_RaceBadge_img {
+    max-width:100px;
+}
+#sarl_BoatDetails {
+    bottom: 10%;
+    left: 5px;
+}
