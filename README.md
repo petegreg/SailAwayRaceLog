@@ -1,11 +1,11 @@
-SaiLAwayRaceLog Github  
+**SaiLAwayRaceLog Github**
   
-windy.js  
+**windy.js**
 const options = { key: 'your windy api4 Key',  
   
 fetch URLs prefix'https://gcloud.ingenium.net.au/  
   
-windy.css  
+**windy.css  
 0.svg  
 1.svg  
 2.svg  
@@ -17,9 +17,9 @@ windy.css
 8.svg  
 pbuoy.svg  
 sbuoy.svg  
-sfbuoy.svg  
+sfbuoy.svg**  
   
-HTML  
+**HTML** 
 <html>  
     <link rel="stylesheet" href="/static/windy.css">  
     <script src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"></script>  
@@ -28,4 +28,4 @@ HTML
     <body>          
         <div id="windy"></div>  
     </body>      
-</html>  
+</html>
