@@ -1,10 +1,6 @@
 **SaiLAwayRaceLog Github**
   
 **windy.js**
-const options = { key: 'your windy api4 Key',  
-  
-fetch URLs prefix'https://gcloud.ingenium.net.au/  
-  
 **windy.css  
 0.svg  
 1.svg  
