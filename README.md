@@ -19,7 +19,8 @@ pbuoy.svg
 sbuoy.svg  
 sfbuoy.svg**  
   
-**HTML** 
+**HTML**
+```html
 <html>  
     <link rel="stylesheet" href="/static/windy.css">  
     <script src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"></script>  
@@ -29,3 +30,4 @@ sfbuoy.svg**
         <div id="windy"></div>  
     </body>      
 </html>
+```
