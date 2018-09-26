@@ -21,5 +21,5 @@ mapbox.png
 measure.png  
 Navionics.png  
 
-**templates**
+**templates**  
 sarl_frame.html
