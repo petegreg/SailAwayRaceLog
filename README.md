@@ -1,7 +1,7 @@
 **SaiLAwayRaceLog Github**
 
 **static**  
-windy.js
+windy.js  
 windy.css  
 0.svg  
 1.svg  
