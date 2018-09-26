@@ -2,18 +2,102 @@ var threeHours = 3 * 60 * 60 * 1000
   const options = {
     key: 'your windy API4 key',
     // Put additional console output
-		// verbose: true,
-		timestamp: Date.now() - threeHours,
-		minZoom: 0,
-		maxZoom: 17,
-		_layersMaxZoom: 17,
+	// verbose: true,
+	timestamp: Date.now() - threeHours,
+	minZoom: 0,
+	maxZoom: 18,
   }
 
-  windyInit( options, windyAPI => {
+function toggleMeasure(){
+	W.broadcast.fire('rqstOpen','distance');	 
+}
 
-    const { map, picker, contextmenu, utils, broadcast } = windyAPI
+toggleE = true;
+function toggleEnglish(){
+	if(!toggleE) {
+		W.store.set('englishLabels', true);
+		toggleE = true;
+	} else {
+		W.store.set('englishLabels', false);
+		toggleE = false;
+	}
+}
+
+toggleN = false;
+function toggleNavionics(){
+	
+	if(!toggleN) {
+		var Navioverlay=new JNC.Leaflet.NavionicsOverlay({
+			navKey: 'your Navionics key',
+			chartType: JNC.NAVIONICS_CHARTS.SONARCHART,
+			isTransparent: true,
+			zIndex: 11,
+			maxZoom: 18
+		});
+
+		Navioverlay.addTo(W.maps);		
+		toggleN = true;
+	} 
+}
+
+toggleM = false;
+function toggleMapbox(){
+	if(!toggleM){
+		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+			minZoom: 12,
+			maxZoom: 18,
+			zIndex:10,
+			//opacity:.5,
+			id: 'mapbox.outdoors',
+			accessToken: 'you mapbox token
+		}).addTo(W.maps);
+
+		toggleM = true;
+	}
+}
+
+windyInit( options, windyAPI => {
+
+    const { map, utils, broadcast } = windyAPI
 
 var racenr = window.location.search.split ('?racenr=')[1];
+W.store.set('favOverlays',['wind', 'gust', 'currents']);
+W.store.set('latlon', true);
+W.store.set('englishLabels', true);
+
+W.map.options.maxZoom = 18;		
+
+var windy_div = document.getElementById("bottom").parentNode;
+var sarl_BoatDetails = document.createElement("div");
+sarl_BoatDetails.setAttribute('id', 'sarl_BoatDetails');
+sarl_BoatDetails.setAttribute('class', 'sarl');
+var bottomDiv = document.getElementById("bottom");
+windy_div.insertBefore(sarl_BoatDetails, bottomDiv);
+
+var sarl_EnglishToggle = document.createElement("div");
+sarl_EnglishToggle.setAttribute('id', 'sarl_EnglishToggle');
+sarl_EnglishToggle.setAttribute('class', 'sarl');
+sarl_EnglishToggle.innerHTML = '<a title="Toggle English place names"><img id="sarl_EnglishToggle_img" src="/static/En.png" onClick="toggleEnglish()"></a>';
+windy_div.insertBefore(sarl_EnglishToggle, bottomDiv);
+
+var sarl_NavionicsToggle = document.createElement("div");
+sarl_NavionicsToggle.setAttribute('id', 'sarl_NavionicsToggle');
+sarl_NavionicsToggle.setAttribute('class', 'sarl');
+sarl_NavionicsToggle.innerHTML = '<a title="Turn on Navionics layer"><img id="sarl_NavionicsToggle_img" src="/static/Navionics.png" onClick="toggleNavionics()"></a>';
+windy_div.insertBefore(sarl_NavionicsToggle, bottomDiv);
+
+var sarl_MapboxToggle = document.createElement("div");
+sarl_MapboxToggle.setAttribute('id', 'sarl_MapboxToggle');
+sarl_MapboxToggle.setAttribute('class', 'sarl');
+sarl_MapboxToggle.innerHTML = '<a title="Turn on Mapbox layer at high zoom levels"><img id="sarl_MapboxToggle_img" src="/static/mapbox.png" onClick="toggleMapbox()"></a>';
+windy_div.insertBefore(sarl_MapboxToggle, bottomDiv);
+
+var sarl_MeasureToggle = document.createElement("div");
+sarl_MeasureToggle.setAttribute('id', 'sarl_MeasureToggle');
+sarl_MeasureToggle.setAttribute('class', 'sarl');
+sarl_MeasureToggle.innerHTML = '<a title="Distance measuring tool."><img id="sarl_MeasureToggle_img" src="/static/measure.png" onClick="toggleMeasure()"></a>';
+windy_div.insertBefore(sarl_MeasureToggle, bottomDiv);
 
 const SFBUOY_ICON_URL = '/static/sfbuoy.svg';
 const SBUOY_ICON_URL = '/static/sbuoy.svg';
@@ -227,13 +311,7 @@ fetch('https://gcloud.ingenium.net.au/racelog?racenr='+racenr)
   try {
     let hue = 0;
 	map_bounds = [];
-	boat_types = [];
-	var windy_div = document.getElementById("bottom").parentNode;
-	var sarl_BoatDetails = document.createElement("div");
-	sarl_BoatDetails.setAttribute('id', 'sarl_BoatDetails');
-	sarl_BoatDetails.setAttribute('class', 'sarl');
-	var bottomDiv = document.getElementById("bottom");
-	windy_div.insertBefore(sarl_BoatDetails, bottomDiv);
+	boat_types = [];	
 
     for (const boatName of Object.keys(result)) {
       hue = (hue + 60) % 360;
@@ -408,6 +486,11 @@ fetch('https://gcloud.ingenium.net.au/racelog?racenr='+racenr)
 						document.getElementById("sarl_BoatDetails").innerHTML = boatStatus;
 											
 				});
+				marker.on('click', function(e) {						
+					var boatStatus = 'Rank: '+ boat.rank +'<br/>Boat: '+boat.ubtname+' - '+boat.btptype+'<br/>Skipper: ' +boat.usrname+'<br/>Speed: '+boat.lastreport_speed+'Knts<br/>Track Distance: '+boat.trackdistance+'NM<br/>Heading: '+boat.heading;					
+					document.getElementById("sarl_BoatDetails").innerHTML = boatStatus;
+										
+				});
 				
 				if ((boat.finished == 'true') && (boat.status == 'Finished')) {
         		    coords_lat = coords[0];
@@ -447,6 +530,11 @@ fetch('https://gcloud.ingenium.net.au/racelog?racenr='+racenr)
 							document.getElementById("sarl_BoatDetails").innerHTML = boatStatus;		
 												
 						});
+						copy_marker.on('click', function(e) {						
+							var boatStatus = 'Rank: '+ boat.rank +'<br/>Boat: '+boat.ubtname+' - '+boat.btptype+'<br/>Skipper: ' +boat.usrname+'<br/>Speed: '+boat.lastreport_speed+'Knts<br/>Track Distance: '+boat.trackdistance+'NM<br/>Heading: '+boat.heading;					
+							document.getElementById("sarl_BoatDetails").innerHTML = boatStatus;		
+												
+						});
 					}
 				}
 			}
@@ -456,8 +544,7 @@ fetch('https://gcloud.ingenium.net.au/racelog?racenr='+racenr)
 		  }
 	  }
 	}
-	map.options.maxZoom = 17;
-	ZoomToMapBounds(map_bounds);
+	W.maps.fitBounds(map_bounds,{padding:[10,10]});	
 	updateIconStyle();
   } catch (ex) {
     console.error(`Error querying boats: ${ex.message}`);
@@ -468,6 +555,4 @@ fetch('https://gcloud.ingenium.net.au/racelog?racenr='+racenr)
 });
 turnOnListeners();
 }
-W.store.set('favOverlays',['wind', 'gust', 'currents'])
-
 })

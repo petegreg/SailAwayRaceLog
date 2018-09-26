@@ -20,6 +20,39 @@
     max-width:100px;
 }
 #sarl_BoatDetails {
-    bottom: 10%;
+    top: 5px;
+    left: 125px;
+}
+#sarl_EnglishToggle{
+    bottom:60%;
     left: 5px;
+}
+
+#sarl_MeasureToggle{
+    bottom:55%;
+    left: 5px;
+}
+
+#sarl_NavionicsToggle{
+    bottom:50%;
+    left: 5px;
+}
+
+#sarl_MapboxToggle{
+    bottom:45%;
+    left: 5px;
+}
+#plugin-distance{    
+    bottom: 70px !important;
+}
+#plugin-distance table td{
+    color: white !important;
+}
+
+.distance-icon{
+    color: white !important;
+} 
+
+.jnc-navionics-overlay-logo{
+    bottom: -3px !important;
 }
