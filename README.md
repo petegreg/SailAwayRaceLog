@@ -15,6 +15,11 @@ windy.css
 pbuoy.svg  
 sbuoy.svg  
 sfbuoy.svg  
-  
+
+En.png  
+mapbox.png  
+measure.png  
+Navionics.png  
+
 **templates**
 sarl_frame.html
